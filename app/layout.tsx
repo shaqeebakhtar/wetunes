@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Work_Sans as FontSans } from 'next/font/google';
 import '@/styles/globals.css';
+import Providers from './providers';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -22,7 +23,7 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} dark font-sans antialiased min-h-screen`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

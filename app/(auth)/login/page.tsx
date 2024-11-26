@@ -1,12 +1,20 @@
 import OAuthLogins from '@/components/auth/oauth-logins';
+import { auth } from '@/utils/auth';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Sign in | WeTunes',
 };
 
-const Login = () => {
+const Login = async () => {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect('/dashboard');
+  }
+
   return (
     <div className="w-full max-w-sm mx-auto flex flex-col items-center">
       <div className="w-full space-y-6">
