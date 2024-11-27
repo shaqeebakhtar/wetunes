@@ -34,6 +34,53 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
+  room          Room?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model Room {
+  id      String  @id @default(cuid())
+  adminId String  @unique
+  admin   User    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  tracks  Track[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rooms")
+}
+
+model Track {
+  id           String @id @default(cuid())
+  roomId       String
+  room         Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  url          String
+  videoId      String
+  thumbnailUrl String
+  votes        Vote[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tracks")
+}
+
+model Vote {
+  id String @id @default(cuid())
+
+  voterId      String
+  votedTrackId String
+  track        Track  @relation(fields: [votedTrackId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([voterId, votedTrackId])
+  @@index([voterId])
+  @@index([votedTrackId])
+  @@map("votes")
 }
