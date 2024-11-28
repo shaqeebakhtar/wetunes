@@ -55,13 +55,14 @@ model Room {
 }
 
 model Track {
-  id           String @id @default(cuid())
-  roomId       String
-  room         Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  url          String
-  videoId      String
-  thumbnailUrl String
-  votes        Vote[]
+  id             String @id @default(cuid())
+  roomId         String
+  room           Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  url            String
+  videoId        String
+  hdThumbnailUrl String
+  sdThumbnailUrl String
+  votes          Vote[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
