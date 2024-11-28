@@ -12,7 +12,7 @@ const Register = async () => {
   const session = await auth();
 
   if (session?.user) {
-    redirect('/dashboard');
+    redirect('/room');
   }
 
   return (

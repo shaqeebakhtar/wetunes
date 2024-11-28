@@ -28,7 +28,7 @@ const OAuthLogins = ({ googleVariant }: OAuthLoginsProps) => {
     await signIn('google', {
       callbackUrl: searchParams.get('next')
         ? (searchParams.get('next') as string)
-        : '/dashboard',
+        : '/room',
     });
   };
 
