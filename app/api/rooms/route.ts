@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const validatedFields = roomSchema.safeParse(body);
 
   if (!validatedFields.success) {
-    return Response.json({ error: 'invalid youtube url' }, { status: 400 });
+    return Response.json({ error: 'invalid room name' }, { status: 400 });
   }
 
   const { name } = validatedFields.data;

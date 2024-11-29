@@ -43,7 +43,7 @@ export async function POST(
   } catch (error) {
     return Response.json(
       { error: 'error while voting', message: error },
-      { status: 200 }
+      { status: 500 }
     );
   }
 
@@ -93,7 +93,7 @@ export async function DELETE(
   } catch (error) {
     return Response.json(
       { error: 'error while down voting', message: error },
-      { status: 200 }
+      { status: 500 }
     );
   }
 

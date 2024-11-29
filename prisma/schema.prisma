@@ -34,7 +34,7 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
-  room          Room?
+  rooms         Room[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -45,7 +45,7 @@ model User {
 model Room {
   id      String  @id @default(cuid())
   name    String
-  adminId String  @unique
+  adminId String
   admin   User    @relation(fields: [adminId], references: [id], onDelete: Cascade)
   tracks  Track[]
 
@@ -57,12 +57,14 @@ model Room {
 
 model Track {
   id             String @id @default(cuid())
+  title          String
   roomId         String
   room           Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
   url            String
   videoId        String
   hdThumbnailUrl String
   sdThumbnailUrl String
+  channel        String
   votes          Vote[]
 
   createdAt DateTime @default(now())

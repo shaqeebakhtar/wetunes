@@ -9,7 +9,7 @@ const MusicPlayer = () => {
     <div className="p-2 rounded-sm border bg-muted">
       <div className="space-y-3">
         <Image
-          src={'https://img.youtube.com/vi/k85UB5b6pJU/maxresdefault.jpg'}
+          src={'https://i.ytimg.com/vi/W4sHmzMCo8s/maxresdefault.jpg'}
           alt="music"
           width={1280}
           height={720}
@@ -20,7 +20,7 @@ const MusicPlayer = () => {
           Memories | Latest Punjabi Songs 2023
         </p>
       </div>
-      <div className="mt-6 mb-4 mx-auto w-[200px] grid gap-2 place-items-center grid-cols-3">
+      <div className="mt-6 mb-4 mx-auto w-40 grid gap-2 place-items-center grid-cols-3">
         <div />
         <Button
           size="icon"

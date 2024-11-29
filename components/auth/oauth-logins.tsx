@@ -49,9 +49,9 @@ const OAuthLogins = ({ googleVariant }: OAuthLoginsProps) => {
         onClick={handleGoogleSingin}
       >
         {isGoogleSignin ? (
-          <LoaderIcon className="w-4 h-4 animate-spin mr-2" />
+          <LoaderIcon className="w-4 h-4 animate-spin" />
         ) : (
-          <Icons.google className="w-4 h-4 mr-2" />
+          <Icons.google className="w-4 h-4" />
         )}
         Continue with Google
       </Button>
@@ -61,9 +61,9 @@ const OAuthLogins = ({ googleVariant }: OAuthLoginsProps) => {
         onClick={handleGithubSingin}
       >
         {isGithubSignin ? (
-          <LoaderIcon className="w-4 h-4 animate-spin mr-2" />
+          <LoaderIcon className="w-4 h-4 animate-spin" />
         ) : (
-          <Icons.gitHub className="w-4 h-4 mr-2" />
+          <Icons.gitHub className="w-4 h-4" />
         )}
         Continue with GitHub
       </Button>

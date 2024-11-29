@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Work_Sans as FontSans } from 'next/font/google';
 import '@/styles/globals.css';
 import Providers from './providers';
+import { Toaster } from '@/components/ui/sonner';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -23,7 +24,10 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} dark font-sans antialiased min-h-screen`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <Toaster position="top-center" richColors />
+        </Providers>
       </body>
     </html>
   );
