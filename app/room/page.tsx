@@ -24,7 +24,11 @@ const Page = () => {
           <TabsContent value="create">
             <form className="space-y-4 mt-6">
               <div className="space-y-2">
-                <Input id="room-name" placeholder="Enter a name of your room" />
+                <Input
+                  id="room-name"
+                  placeholder="Enter a name of your room"
+                  className="h-10"
+                />
               </div>
               <Button type="submit" className="w-full">
                 <HeadphonesIcon className="h-4 w-4" /> Create Room
@@ -34,7 +38,11 @@ const Page = () => {
           <TabsContent value="join">
             <form className="space-y-4 mt-6">
               <div className="space-y-2">
-                <Input id="room-id" placeholder="Enter the room ID" />
+                <Input
+                  id="room-id"
+                  placeholder="Enter the room ID"
+                  className="h-10"
+                />
               </div>
               <Button type="submit" className="w-full">
                 <UsersIcon className="h-4 w-4" /> Join Room
