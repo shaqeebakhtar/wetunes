@@ -5,6 +5,9 @@ import { ThumbsUpIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Track as TTrack } from '@prisma/client';
 import { useSession } from 'next-auth/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { voteTrack } from '@/services/track';
+import { useParams } from 'next/navigation';
 
 const Track = ({
   track,
@@ -19,6 +22,7 @@ const Track = ({
   };
   isPlaying?: boolean;
 }) => {
+  const { roomId } = useParams<{ roomId: string }>();
   const { data: session } = useSession();
   const [isVoted, setIsVoted] = useState(() => {
     return (
@@ -26,6 +30,20 @@ const Track = ({
       session?.user.id
     );
   });
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: voteTrack,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tracks', roomId] });
+    },
+  });
+
+  const handleVote = () => {
+    setIsVoted(!isVoted);
+    mutation.mutate({ roomId, trackId: track.id, isVoted });
+  };
 
   return (
     <div className="p-2 border bg-muted rounded-sm flex gap-4 items-center justify-between">
@@ -58,6 +76,7 @@ const Track = ({
           isVoted &&
             'bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground'
         )}
+        onClick={handleVote}
       >
         <ThumbsUpIcon />
         {track._count.votes}
