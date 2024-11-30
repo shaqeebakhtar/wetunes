@@ -4,13 +4,15 @@ import RoomHeader from '@/components/room/header';
 import MusicPlayer from '@/components/room/music-player';
 import TrackQueue from '@/components/room/track-queue';
 import { getRoomById } from '@/services/room';
+import { Track } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { notFound, redirect, useParams, usePathname } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 
 function Page() {
   const { data: session, status } = useSession();
+  const [currentTrack, setCurrentTrack] = useState<null | Track>(null);
 
   if (status !== 'loading' && !session?.user) {
     redirect('/login/?next=/room');
@@ -38,10 +40,10 @@ function Page() {
       <main className="mx-auto max-w-screen-lg py-12 px-3 lg:px-20">
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
           <div className="space-y-4">
-            <MusicPlayer />
+            <MusicPlayer adminId={room.adminId} currentTrack={currentTrack} />
             <AddSong />
           </div>
-          <TrackQueue />
+          <TrackQueue setCurrentTrack={setCurrentTrack} />
         </div>
       </main>
     </>

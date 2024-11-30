@@ -21,6 +21,7 @@ const AddSong = () => {
       setIsAddingTrack(false);
       queryClient.invalidateQueries({ queryKey: ['tracks', roomId] });
       setYtUrl('');
+      toast.success('Your song has been added to queue');
     },
     onError: (error) => {
       toast.error(error.message as string);

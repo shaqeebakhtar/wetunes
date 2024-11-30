@@ -37,17 +37,21 @@ const Track = ({
           height={360}
           className="w-14 aspect-square object-cover bg-center rounded"
         />
-        <p
-          className={cn(
-            'max-w-72 text-sm font-medium line-clamp-2',
-            isPlaying && 'text-primary'
-          )}
-        >
-          {track.title}
-        </p>
+        <div className="space-y-1">
+          <p
+            className={cn(
+              'max-w-72 text-sm font-medium line-clamp-1',
+              isPlaying && 'text-primary'
+            )}
+          >
+            {track.title}
+          </p>
+          <p className="text-muted-foreground text-xs truncate">
+            {track.channel}
+          </p>
+        </div>
       </div>
       <Button
-        size="icon"
         variant="outline"
         className={cn(
           'rounded-full',
@@ -56,6 +60,7 @@ const Track = ({
         )}
       >
         <ThumbsUpIcon />
+        {track._count.votes}
       </Button>
     </div>
   );

@@ -93,6 +93,16 @@ export async function GET(
       where: {
         roomId,
       },
+      orderBy: [
+        {
+          votes: {
+            _count: 'desc',
+          },
+        },
+        {
+          createdAt: 'asc',
+        },
+      ],
       include: {
         votes: {
           select: {

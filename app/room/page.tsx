@@ -15,6 +15,7 @@ const Page = () => {
   const [roomName, setRoomName] = useState('');
   const [roomId, setRoomId] = useState('');
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+  const [isJoiningRoom, setIsJoiningRoom] = useState(false);
   const router = useRouter();
 
   if (status !== 'loading' && !session?.user) {
@@ -57,12 +58,17 @@ const Page = () => {
   };
 
   const handleJoinRoom = (e: FormEvent) => {
+    setIsJoiningRoom(true);
     e.preventDefault();
 
     if (roomId === '') {
+      setIsJoiningRoom(false);
       toast.error('Room Id cannot be empty');
       return;
     }
+
+    setIsJoiningRoom(false);
+    redirect(`/room/${roomId}`);
   };
 
   return (
@@ -115,7 +121,7 @@ const Page = () => {
                 />
               </div>
               <Button type="submit" className="w-full">
-                {isCreatingRoom ? (
+                {isJoiningRoom ? (
                   <LoaderIcon className="h-4 w-4 animate-spin" />
                 ) : (
                   <UsersIcon className="h-4 w-4" />
