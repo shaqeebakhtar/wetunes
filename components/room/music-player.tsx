@@ -2,7 +2,6 @@
 import { Track } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useEffect } from 'react';
 import YouTubePlayer from './youtube-player';
 
 const MusicPlayer = ({
@@ -13,18 +12,6 @@ const MusicPlayer = ({
   adminId: string;
 }) => {
   const { data: session } = useSession();
-
-  // youtube iframe script
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://www.youtube.com/iframe_api';
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
 
   return (
     <>

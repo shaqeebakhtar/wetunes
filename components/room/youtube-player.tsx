@@ -1,6 +1,8 @@
+'use client';
+import { PauseIcon, PlayIcon, SkipForwardIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '../ui/button';
-import { PauseIcon, PlayIcon, SkipForwardIcon } from 'lucide-react';
+import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
 
 const YouTubePlayer = ({
   videoId,
@@ -9,56 +11,42 @@ const YouTubePlayer = ({
   videoId: string;
   title: string;
 }) => {
-  const playerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const videoElementRef = useRef<YouTubePlayer | null>(null);
+
+  const onPlayerReady: YouTubeProps['onReady'] = (event) => {
+    videoElementRef.current = event;
+  };
+
+  const opts: YouTubeProps['opts'] = {
+    height: '0',
+    width: '0',
+  };
 
   useEffect(() => {
-    let player;
-
-    window.onYouTubeIframeAPIReady = () => {
-      player = new YT.Player('ytplayer', {
-        videoId,
-        events: {
-          onReady: (event) => {
-            playerRef.current = event.target;
-          },
-        },
-      });
-    };
-
-    return () => {
-      if (player) {
-        player.destroy();
+    if (videoElementRef.current) {
+      if (!isPlaying) {
+        videoElementRef.current.target.pauseVideo();
+      } else {
+        videoElementRef.current.target.playVideo();
       }
-    };
-  }, [videoId]);
-
-  const playPauseVideo = () => {
-    if (playerRef.current) {
-      isPlaying
-        ? playerRef.current.pauseVideo()
-        : playerRef.current.playVideo();
-      setIsPlaying(!isPlaying);
     }
-  };
+  }, [isPlaying, videoElementRef]);
 
   return (
     <div className="mt-6 mb-4 mx-auto w-40 grid gap-2 place-items-center grid-cols-3">
-      <iframe
-        id="ytplayer"
-        width="640"
-        height="360"
-        className="hidden sr-only"
-        src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1`}
+      <YouTube
+        videoId={videoId}
         title={title}
-        allow="autoplay; encrypted-media; picture-in-picture;"
-        allowFullScreen
-      ></iframe>
+        opts={opts}
+        onReady={onPlayerReady}
+        className="hidden sr-only"
+      />
       <div />
       <Button
         size="icon"
         className="size-12 rounded-full"
-        onClick={playPauseVideo}
+        onClick={() => setIsPlaying(!isPlaying)}
       >
         {isPlaying ? <PauseIcon /> : <PlayIcon />}
       </Button>
