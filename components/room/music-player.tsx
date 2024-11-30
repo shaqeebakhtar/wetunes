@@ -39,6 +39,7 @@ const MusicPlayer = ({
               <YouTubePlayer
                 videoId={currentTrack.videoId}
                 title={currentTrack.title}
+                currentTrackId={currentTrack.id}
               />
             )}
           </>

@@ -66,3 +66,29 @@ export const voteTrack = async ({
 
   return data.tracks;
 };
+
+export const playNextTrack = async ({
+  roomId,
+  trackId,
+}: {
+  roomId: string;
+  trackId: string;
+}) => {
+  const res = await fetch(
+    `/api/rooms/${roomId}/tracks/next?currTrack=${trackId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error);
+  }
+
+  return data.tracks;
+};
