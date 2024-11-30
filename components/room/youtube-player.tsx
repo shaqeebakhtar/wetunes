@@ -23,7 +23,7 @@ const YouTubePlayer = ({
 
   const onPlayerReady: YouTubeProps['onReady'] = (event) => {
     event.target.playVideo();
-    videoElementRef.current = event;
+    videoElementRef.current = event.target;
   };
 
   const opts: YouTubeProps['opts'] = {
@@ -37,9 +37,9 @@ const YouTubePlayer = ({
   useEffect(() => {
     if (videoElementRef.current) {
       if (!isPlaying) {
-        videoElementRef.current.target.pauseVideo();
+        videoElementRef.current.pauseVideo();
       } else {
-        videoElementRef.current.target.playVideo();
+        videoElementRef.current.playVideo();
       }
     }
   }, [isPlaying, videoElementRef]);
@@ -47,7 +47,6 @@ const YouTubePlayer = ({
   const mutation = useMutation({
     mutationFn: playNextTrack,
     onSuccess: () => {
-      videoElementRef.current.target.playVideo();
       toast.success('Playing next song');
     },
   });
@@ -59,7 +58,6 @@ const YouTubePlayer = ({
         title={title}
         opts={opts}
         onReady={onPlayerReady}
-        // onEnd={mutation.mutate({ roomId, trackId: currentTrackId })}
         className="hidden sr-only"
       />
       <div />
