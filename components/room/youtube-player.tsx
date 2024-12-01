@@ -69,6 +69,9 @@ const YouTubePlayer = ({
         title={title}
         opts={opts}
         onReady={onPlayerReady}
+        onEnd={() =>
+          playNextTrackMutation.mutate({ roomId, trackId: currentTrackId })
+        }
         className="hidden sr-only"
       />
       <div />
