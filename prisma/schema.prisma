@@ -56,10 +56,11 @@ model Room {
 }
 
 model Track {
-  id             String @id @default(cuid())
+  id             String  @id @default(cuid())
   title          String
+  isPlaying      Boolean @default(false)
   roomId         String
-  room           Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  room           Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
   url            String
   videoId        String
   hdThumbnailUrl String

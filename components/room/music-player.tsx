@@ -3,6 +3,12 @@ import { Track } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import YouTubePlayer from './youtube-player';
+import { Button } from '../ui/button';
+import { useRoomStore } from '@/store/room';
+import { useMutation } from '@tanstack/react-query';
+import { setPlayingTrack } from '@/services/track';
+import { toast } from 'sonner';
+import { useParams } from 'next/navigation';
 
 const MusicPlayer = ({
   currentTrack,
@@ -11,7 +17,17 @@ const MusicPlayer = ({
   currentTrack: Track | null;
   adminId: string;
 }) => {
+  const { roomId } = useParams<{ roomId: string }>();
   const { data: session } = useSession();
+  const nextPlayingTrack = useRoomStore((state) => state.nextPlayingTrack);
+  const tracks = useRoomStore((state) => state.tracks);
+
+  const setPlayingTrackMutation = useMutation({
+    mutationFn: setPlayingTrack,
+    onSuccess: () => {
+      toast.success('Starting playing songs');
+    },
+  });
 
   return (
     <>
@@ -45,7 +61,22 @@ const MusicPlayer = ({
           </>
         ) : (
           <div className="w-[400px] aspect-square grid place-items-center">
-            <p className="font-medium">No songs in the queue</p>
+            <div className="flex flex-col gap-4 items-center justify-center">
+              <p className="font-medium">No songs playing</p>
+              {tracks.length > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    setPlayingTrackMutation.mutate({
+                      trackId: nextPlayingTrack?.id as string,
+                      roomId,
+                    })
+                  }
+                >
+                  Start Playing
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </div>

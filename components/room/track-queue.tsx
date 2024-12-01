@@ -1,18 +1,25 @@
 'use client';
-import React, { useEffect } from 'react';
-import Track from './track';
-import { ScrollArea } from '../ui/scroll-area';
-import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
 import { getTracksByRoomId } from '@/services/track';
+import { useRoomStore } from '@/store/room';
 import { Track as TTrack } from '@prisma/client';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { ScrollArea } from '../ui/scroll-area';
+import Track from './track';
 
-type TrackQueueProps = {
-  setCurrentTrack: (track: TTrack) => void;
-};
-
-const TrackQueue = ({ setCurrentTrack }: TrackQueueProps) => {
+const TrackQueue = () => {
   const { roomId } = useParams<{ roomId: string }>();
+  const setCurrentPlayingTrack = useRoomStore(
+    (state) => state.setCurrentPlayingTrack
+  );
+  const setTracks = useRoomStore((state) => state.setTracks);
+  const currentPlayingTrack = useRoomStore(
+    (state) => state.currentPlayingTrack
+  );
+  const setNextPlayingTrack = useRoomStore(
+    (state) => state.setNextPlayingTrack
+  );
 
   const {
     data: tracks,
@@ -25,8 +32,34 @@ const TrackQueue = ({ setCurrentTrack }: TrackQueueProps) => {
   });
 
   useEffect(() => {
-    if (isSuccess) setCurrentTrack(tracks[0] ?? null);
-  }, [isSuccess, setCurrentTrack, tracks]);
+    // get the isPlaying key on tracks and set it to current track
+    if (isSuccess) {
+      setTracks(tracks);
+      setCurrentPlayingTrack(
+        tracks.find((track: TTrack) => track.isPlaying === true)
+      );
+      setNextPlayingTrack(
+        tracks.filter(
+          (
+            track: TTrack & {
+              _count: { votes: number };
+              votes: {
+                votedTrackId: string;
+                voterId: string;
+              }[];
+            }
+          ) => track.isPlaying === false
+        )[0]
+      );
+    }
+  }, [
+    isSuccess,
+    roomId,
+    setCurrentPlayingTrack,
+    setNextPlayingTrack,
+    setTracks,
+    tracks,
+  ]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -35,30 +68,49 @@ const TrackQueue = ({ setCurrentTrack }: TrackQueueProps) => {
   return (
     <ScrollArea className="md:h-[calc(100vh-12rem)] md:pr-3">
       <div className="space-y-8">
-        {tracks.length > 0 && (
+        {currentPlayingTrack && (
           <div className="space-y-2">
             <h3 className="font-bold pb-2">Now playing</h3>
-            <Track isPlaying track={tracks[0]} />
+            <Track isPlaying track={currentPlayingTrack} />
           </div>
         )}
         <div className="space-y-2">
           <h3 className="font-bold sticky top-0 bg-background pb-2">
             Next in queue
           </h3>
-          <div className="space-y-3">
-            {tracks.length > 0 &&
-              tracks.slice(1).map(
-                (
-                  track: TTrack & {
-                    _count: { votes: number };
-                    votes: {
-                      votedTrackId: string;
-                      voterId: string;
-                    }[];
-                  }
-                ) => <Track key={track.id} track={track} />
-              )}
-          </div>
+          {tracks.length > 0 ? (
+            <div className="space-y-3">
+              {tracks
+                .filter(
+                  (
+                    track: TTrack & {
+                      _count: { votes: number };
+                      votes: {
+                        votedTrackId: string;
+                        voterId: string;
+                      }[];
+                    }
+                  ) => track.isPlaying === false
+                )
+                .map(
+                  (
+                    track: TTrack & {
+                      _count: { votes: number };
+                      votes: {
+                        votedTrackId: string;
+                        voterId: string;
+                      }[];
+                    }
+                  ) => (
+                    <Track key={track.id} track={track} />
+                  )
+                )}
+            </div>
+          ) : (
+            <div className="p-2 border bg-muted rounded-sm flex items-center justify-center">
+              <p className="text-sm font-medium">No tracks in queue</p>
+            </div>
+          )}
         </div>
       </div>
     </ScrollArea>

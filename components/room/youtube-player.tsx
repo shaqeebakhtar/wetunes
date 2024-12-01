@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
 import { useMutation } from '@tanstack/react-query';
-import { playNextTrack } from '@/services/track';
+import { playNextTrack, setPlayingTrack } from '@/services/track';
 import { toast } from 'sonner';
 import { useParams } from 'next/navigation';
+import { useRoomStore } from '@/store/room';
 
 const YouTubePlayer = ({
   videoId,
@@ -20,6 +21,7 @@ const YouTubePlayer = ({
   const { roomId } = useParams<{ roomId: string }>();
   const [isPlaying, setIsPlaying] = useState(true);
   const videoElementRef = useRef<YouTubePlayer | null>(null);
+  const nextPlayingTrack = useRoomStore((state) => state.nextPlayingTrack);
 
   const onPlayerReady: YouTubeProps['onReady'] = (event) => {
     event.target.playVideo();
@@ -44,11 +46,20 @@ const YouTubePlayer = ({
     }
   }, [isPlaying, videoElementRef]);
 
-  const mutation = useMutation({
+  const playNextTrackMutation = useMutation({
     mutationFn: playNextTrack,
     onSuccess: () => {
+      setPlayingTrackMutation.mutate({
+        trackId: nextPlayingTrack?.id as string,
+        roomId,
+      });
+      setIsPlaying(true);
       toast.success('Playing next song');
     },
+  });
+
+  const setPlayingTrackMutation = useMutation({
+    mutationFn: setPlayingTrack,
   });
 
   return (
@@ -72,7 +83,9 @@ const YouTubePlayer = ({
         variant="ghost"
         size="icon"
         className="rounded-full hover:bg-background"
-        onClick={() => mutation.mutate({ roomId, trackId: currentTrackId })}
+        onClick={() =>
+          playNextTrackMutation.mutate({ roomId, trackId: currentTrackId })
+        }
       >
         <SkipForwardIcon className="h-4 w-4" />
       </Button>

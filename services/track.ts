@@ -92,3 +92,26 @@ export const playNextTrack = async ({
 
   return data.tracks;
 };
+
+export const setPlayingTrack = async ({
+  roomId,
+  trackId,
+}: {
+  roomId: string;
+  trackId: string;
+}) => {
+  const res = await fetch(`/api/rooms/${roomId}/tracks/${trackId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error);
+  }
+
+  return data.tracks;
+};
