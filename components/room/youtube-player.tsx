@@ -56,6 +56,9 @@ const YouTubePlayer = ({
       setIsPlaying(true);
       toast.success('Playing next song');
     },
+    onError: () => {
+      toast.error('No more songs to play');
+    },
   });
 
   const setPlayingTrackMutation = useMutation({

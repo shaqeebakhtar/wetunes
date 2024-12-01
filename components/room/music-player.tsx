@@ -25,7 +25,10 @@ const MusicPlayer = ({
   const setPlayingTrackMutation = useMutation({
     mutationFn: setPlayingTrack,
     onSuccess: () => {
-      toast.success('Starting playing songs');
+      toast.success('Started playing songs');
+    },
+    onError: () => {
+      toast.error('No more songs to play');
     },
   });
 

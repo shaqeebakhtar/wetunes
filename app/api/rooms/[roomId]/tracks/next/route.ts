@@ -41,7 +41,7 @@ export async function POST(
     });
   } catch (error) {
     return Response.json(
-      { error: 'error while voting', message: error },
+      { error: 'error while playing next song', message: error },
       { status: 500 }
     );
   }
