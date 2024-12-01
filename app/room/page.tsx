@@ -68,7 +68,7 @@ const Page = () => {
     }
 
     setIsJoiningRoom(false);
-    redirect(`/room/${roomId}`);
+    router.push(`/room/${roomId}`);
   };
 
   return (
